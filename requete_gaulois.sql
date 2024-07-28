@@ -51,7 +51,13 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- WHERE po.nom_potion LIKE 'Santé'
 
 /*EXO 8*/
--- AAAAAAAAA
+-- SELECT p.nom_personnage, SUM(pc.qte) AS casquesPris
+-- FROM personnage p
+-- INNER JOIN prendre_casque pc ON p.id_personnage = pc.id_personnage
+-- INNER JOIN casque c ON pc.id_casque = c.id_casque
+-- GROUP BY p.nom_personnage
+-- ORDER BY casquesPris DESC
+-- LIMIT 1
 
 /*EXO 9*/
 -- SELECT p.nom_personnage, bo.dose_boire
@@ -66,3 +72,42 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- GROUP BY b.nom_bataille
 -- ORDER BY casquePris DESC
 -- LIMIT 1
+
+/*EXO 11*/
+-- SELECT tc.nom_type_casque, SUM(c.cout_casque) AS coutTotal
+-- FROM casque c
+-- INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
+-- GROUP BY tc.nom_type_casque
+-- ORDER BY coutTotal DESC
+
+/*EXO 12*/
+-- SELECT po.nom_potion
+-- FROM potion po
+-- INNER JOIN composer co ON po.id_potion = co.id_potion
+-- INNER JOIN ingredient i ON co.id_potion = i.id_ingredient
+-- WHERE co.id_ingredient = 24
+
+/*EXO 13*/
+-- SELECT l.nom_lieu, COUNT(p.id_lieu) AS nbHabitants
+-- FROM lieu l
+-- INNER JOIN personnage p ON l.id_lieu = p.id_lieu
+-- WHERE NOT l.nom_lieu = 'Village gaulois'
+-- GROUP BY l.nom_lieu
+-- ORDER BY nbHabitants DESC
+-- LIMIT 1
+
+/*EXO 14*/
+-- SELECT p.id_personnage, p.nom_personnage
+-- FROM personnage p
+-- LEFT JOIN boire bo ON p.id_personnage = bo.id_personnage
+-- WHERE bo.id_personnage IS NULL
+
+/*EXO 15*/
+-- SELECT p.nom_personnage
+-- FROM personnage p
+-- WHERE p.id_personnage NOT IN(
+-- SELECT au.id_personnage
+-- FROM autoriser_boire au
+-- INNER JOIN potion po ON au.id_potion = po.id_potion
+-- WHERE po.nom_potion = 'Magique'
+-- )
