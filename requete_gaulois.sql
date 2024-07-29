@@ -182,62 +182,25 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 
 /*C*/ -- ERREUR
    /*Trouver casque - (casque ∩ casque_pris) où nom_type_casque = 'Grec'*/
-   
-SELECT c.id_casque, c.nom_casque
-FROM casque c
-INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
-LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
-WHERE pc.id_casque IS NULL
-AND tc.nom_type_casque = 'Grec';
+-- SELECT c.id_casque, c.nom_casque
+-- FROM casque c
+-- INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
+-- LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
+-- WHERE pc.id_casque IS NULL
+-- AND tc.nom_type_casque = 'Grec';
 
-/*DELETE FROM type_casque d'abord*/
-/*
-DELETE FROM casque c
-WHERE c.id_casque IN (
-	SELECT c.id_casque FROM (
-		SELECT c.id_casque
-		FROM casque c
-		INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
-		LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
-		WHERE pc.id_casque IS NULL
-		AND tc.nom_type_casque = 'Grec'
-	) tmp
-)
-*/
-
-DELETE FROM casque c
-WHERE c.id_casque IN (
-	SELECT pc.id_casque
-	FROM prendre_casque pc
-	INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
-	LEFT JOIN casque c ON pc.id_casque = c.id_casque
-	WHERE pc.id_casque IS NULL
-	AND tc.nom_type_casque = 'Grec'
-)
-
-
-/*
-DELETE FROM casque
-WHERE id_casque IN (
-    SELECT c.id_casque
-    FROM casque c
-    LEFT JOIN bataille b ON c.id_casque = b.id_casque
-    WHERE c.id_type_casque = (
-        SELECT id_type_casque
-        FROM type_casque
-        WHERE nom_type_casque = 'grec'
-    )
-    AND b.id_casque IS NULL
-);
-
-*/
-
-
-
-
-
-
-
+-- DELETE FROM casque
+-- WHERE id_casque IN (
+--     SELECT c.id_casque
+--     FROM casque c
+--     LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
+--     WHERE c.id_type_casque = (
+--         SELECT id_type_casque
+--         FROM type_casque
+--         WHERE nom_type_casque = 'Grec'
+--     )
+--     AND pc.id_casque IS NULL
+-- )
 
 /*
 INSERT INTO `casque` (`id_casque`, `nom_casque`, `cout_casque`, `id_type_casque`) VALUES
@@ -261,3 +224,29 @@ INSERT INTO `casque` (`id_casque`, `nom_casque`, `cout_casque`, `id_type_casque`
 	(22, 'Phrygien', 840, 2),
 	(23, 'Hoplite', 600, 2);
 */
+
+/*D*/
+-- INSERT INTO lieu
+-- (nom_lieu)
+-- SELECT 'Condate'
+-- WHERE NOT EXISTS (
+-- SELECT 1
+-- FROM lieu
+-- WHERE nom_lieu = 'Condate'
+-- );
+
+-- SET @id_lieu = (
+-- SELECT id_lieu
+-- FROM lieu
+-- WHERE nom_lieu = 'Condate'
+-- );
+
+-- SET @id_specialite = (
+-- SELECT id_specialite
+-- FROM specialite
+-- WHERE nom_specialite = 'Autre'
+-- );
+
+-- UPDATE personnage
+-- SET adresse_personnage = 'Prison de Condate', image_personnage = 'indisponible.jpg', id_lieu = @id_lieu, id_specialite = @id_specialite
+-- WHERE nom_personnage = 'Zérozérosix'
