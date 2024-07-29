@@ -112,7 +112,7 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- WHERE po.nom_potion = 'Magique'
 -- )
 
-/*A*/
+/*A*/ -- https://www.w3schools.com/sql/sql_syntax.asp
 -- INSERT INTO specialite
 -- (nom_specialite)
 -- SELECT 'Agriculteur'
@@ -137,77 +137,35 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- ('Champdeblix', 'Ferme Hantassion', 'indisponible.jpg', @id_lieu, @id_specialite)
 
 /*B*/
-
 -- INSERT INTO potion
 -- (nom_potion)
--- WHERE NOT EXISTS(
+-- SELECT 'Magique'
+-- WHERE NOT EXISTS (
 -- SELECT 1
 -- FROM potion
--- WHERE nom_lieu = 'Magique'
--- )
+-- WHERE nom_potion = 'Magique'
+-- );
 
 -- SET @id_potion = (
+-- SELECT id_potion
 -- FROM potion
 -- WHERE nom_potion = 'Magique'
--- )
+-- );
 
 -- SET @id_personnage = (
+-- SELECT id_personnage
 -- FROM personnage
 -- WHERE nom_personnage = 'Bonemine'
--- )
+-- );
 
 -- INSERT INTO autoriser_boire
 -- (id_potion, id_personnage)
 -- VALUES
 -- (@id_potion, @id_personnage)
 
-
-
-
-
-
-
-
-
-
--- INSERT INTO potion (nom_potion)
--- SELECT 'Magique'
--- WHERE NOT EXISTS (
--- SELECT 1
--- FROM potion
--- WHERE nom_potion = 'Magique')
-
--- SET @id_personnage = (
--- SELECT id_personnage
--- FROM personnage
--- WHERE nom_personnage = 'Bonemine')
-
--- SET @id_potion = (
--- SELECT id_potion
--- FROM potion
--- WHERE nom_potion = 'Magique')
-
--- INSERT INTO autoriser_boire (id_personnage, id_potion)
--- VALUES (@id_personnage, @id_potion)
-
 /*C*/ -- ERREUR
--- SELECT id_type_casque
--- FROM type_casque
--- WHERE nom_type_casque = 'grec'
+/*
+SELECT nom_casque
+FROM type_casque
+WHERE nom_type_casque = 'Grec'*/
 
--- INSERT INTO specialite (nom_specialite)
--- SELECT 'agriculteur'
--- WHERE NOT EXISTS (SELECT 1
--- FROM specialite
--- WHERE nom_specialite = 'agriculteur')
-
--- SET @id_lieu = (SELECT id_lieu
--- FROM lieu
--- WHERE nom_lieu = 'ferme Hantassion de Rotomagus')
-
--- SET @id_specialite = (SELECT id_specialite
--- FROM specialite
--- WHERE nom_specialite = 'agriculteur')
-
--- INSERT INTO personnage (nom_personnage, adresse_personnage, image_personnage, id_lieu, id_specialite)
--- VALUES ('Champdeblix', 'ferme Hantassion de Rotomagus', NULL, @id_lieu, @id_specialite)
