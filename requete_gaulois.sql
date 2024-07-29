@@ -28,7 +28,7 @@
 -- SELECT b.nom_bataille, b.date_bataille, l.nom_lieu
 -- FROM bataille b
 -- INNER JOIN lieu l ON b.id_lieu = l.id_lieu
--- ORDER BY b.date_bataille -- JE PARS DU PRINCIPE QUE CES DATES SONT EN - (AVANT L'AN 0)
+-- ORDER BY b.date_bataille ASC -- JE PARS DU PRINCIPE QUE CES DATES SONT EN - (AVANT L'AN 0)
 
 /*EXO 6*/
 -- SELECT po.id_potion, po.nom_potion, SUM(co.qte * i.cout_ingredient) AS coutTotal
@@ -120,10 +120,10 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- SELECT p.nom_personnage
 -- FROM personnage p
 -- WHERE p.id_personnage NOT IN(
--- SELECT au.id_personnage
--- FROM autoriser_boire au
--- INNER JOIN potion po ON au.id_potion = po.id_potion
--- WHERE po.nom_potion = 'Magique'
+-- 	SELECT au.id_personnage
+-- 	FROM autoriser_boire au
+-- 	INNER JOIN potion po ON au.id_potion = po.id_potion
+-- 	WHERE po.nom_potion = 'Magique'
 -- )
 
 /*A*/ -- https://www.w3schools.com/sql/sql_syntax.asp
@@ -131,19 +131,22 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- (nom_specialite)
 -- SELECT 'Agriculteur'
 -- WHERE NOT EXISTS (
--- SELECT 1
--- FROM specialite
--- WHERE nom_specialite = 'Agriculteur');
+-- 	SELECT 1
+-- 	FROM specialite
+-- 	WHERE nom_specialite = 'Agriculteur'
+-- );
 
 -- SET @id_lieu = (
 -- SELECT id_lieu
 -- FROM lieu
--- WHERE nom_lieu = 'Rotomagus');
+-- WHERE nom_lieu = 'Rotomagus'
+-- );
 
 -- SET @id_specialite = (
 -- SELECT id_specialite
 -- FROM specialite
--- WHERE nom_specialite = 'Agriculteur');
+-- WHERE nom_specialite = 'Agriculteur'
+-- );
 
 -- INSERT INTO personnage
 -- (nom_personnage, adresse_personnage, image_personnage, id_lieu, id_specialite)
@@ -179,20 +182,65 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 
 /*C*/ -- ERREUR
    /*Trouver casque - (casque ∩ casque_pris) où nom_type_casque = 'Grec'*/
--- SELECT c.id_casque, c.nom_casque
--- FROM casque c
--- INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
--- LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
--- WHERE pc.id_casque IS NULL
--- AND tc.nom_type_casque = 'Grec'
+   
+SELECT c.id_casque, c.nom_casque
+FROM casque c
+INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
+LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
+WHERE pc.id_casque IS NULL
+AND tc.nom_type_casque = 'Grec';
 
--- DELETE c.*
--- FROM casque c
--- WHERE c.id_casque IS IN (
--- 	SELECT c.id_casque
--- 	FROM casque c
--- 	INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
--- 	LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
--- 	WHERE pc.id_casque IS NULL
--- 	AND tc.nom_type_casque = 'Grec'
--- )
+/*DELETE FROM type_casque d'abord*/
+/*
+DELETE FROM casque c
+WHERE c.id_casque IN (
+	SELECT c.id_casque FROM (
+		SELECT c.id_casque
+		FROM casque c
+		INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
+		LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
+		WHERE pc.id_casque IS NULL
+		AND tc.nom_type_casque = 'Grec'
+	) tmp
+)
+*/
+
+DELETE FROM casque c
+WHERE c.id_casque IN (
+	SELECT pc.id_casque
+	FROM prendre_casque pc
+	INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
+	LEFT JOIN casque c ON pc.id_casque = c.id_casque
+	WHERE pc.id_casque IS NULL
+	AND tc.nom_type_casque = 'Grec'
+)
+
+
+
+
+
+
+
+
+/*
+INSERT INTO `casque` (`id_casque`, `nom_casque`, `cout_casque`, `id_type_casque`) VALUES
+	(1, 'Villanovien', 865, 1),
+	(2, 'Negau', 498, 1),
+	(3, 'Corinthien', 765, 2),
+	(4, 'Spangenhelm', 1200, 4),
+	(5, 'Italo-celtique', 660, 1),
+	(10, 'Weisenau', 50, 1),
+	(11, 'Impérial-gaulois', 200, 1),
+	(12, 'Gallois', 540, 4),
+	(13, 'Wisigoth', 631, 4),
+	(14, 'Ostrogoth', 743, 4),
+	(15, 'A cornes', 2900, 3),
+	(16, 'Veksø', 7820, 3),
+	(17, 'Enkomi', 3140, 3),
+	(18, 'Haguenau', 140, 1),
+	(19, 'Picte', 160, 3),
+	(20, 'Athénien', 452, 2),
+	(21, 'Spartiate', 901, 2),
+	(22, 'Phrygien', 840, 2),
+	(23, 'Hoplite', 600, 2);
+*/
