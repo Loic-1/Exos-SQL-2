@@ -113,65 +113,101 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- )
 
 /*A*/
--- INSERT INTO lieu (nom_lieu)
--- SELECT 'ferme Hantassion de Rotomagus'
--- WHERE NOT EXISTS (SELECT 1
+-- INSERT INTO specialite
+-- (nom_specialite)
+-- SELECT 'Agriculteur'
+-- WHERE NOT EXISTS (
+-- SELECT 1
+-- FROM specialite
+-- WHERE nom_specialite = 'Agriculteur');
+
+-- SET @id_lieu = (
+-- SELECT id_lieu
 -- FROM lieu
--- WHERE nom_lieu = 'ferme Hantassion de Rotomagus');
+-- WHERE nom_lieu = 'Rotomagus');
+
+-- SET @id_specialite = (
+-- SELECT id_specialite
+-- FROM specialite
+-- WHERE nom_specialite = 'Agriculteur');
+
+-- INSERT INTO personnage
+-- (nom_personnage, adresse_personnage, image_personnage, id_lieu, id_specialite)
+-- VALUES
+-- ('Champdeblix', 'Ferme Hantassion', 'indisponible.jpg', @id_lieu, @id_specialite)
+
+/*B*/
+
+-- INSERT INTO potion
+-- (nom_potion)
+-- WHERE NOT EXISTS(
+-- SELECT 1
+-- FROM potion
+-- WHERE nom_lieu = 'Magique'
+-- )
+
+-- SET @id_potion = (
+-- FROM potion
+-- WHERE nom_potion = 'Magique'
+-- )
+
+-- SET @id_personnage = (
+-- FROM personnage
+-- WHERE nom_personnage = 'Bonemine'
+-- )
+
+-- INSERT INTO autoriser_boire
+-- (id_potion, id_personnage)
+-- VALUES
+-- (@id_potion, @id_personnage)
+
+
+
+
+
+
+
+
+
+
+-- INSERT INTO potion (nom_potion)
+-- SELECT 'Magique'
+-- WHERE NOT EXISTS (
+-- SELECT 1
+-- FROM potion
+-- WHERE nom_potion = 'Magique')
+
+-- SET @id_personnage = (
+-- SELECT id_personnage
+-- FROM personnage
+-- WHERE nom_personnage = 'Bonemine')
+
+-- SET @id_potion = (
+-- SELECT id_potion
+-- FROM potion
+-- WHERE nom_potion = 'Magique')
+
+-- INSERT INTO autoriser_boire (id_personnage, id_potion)
+-- VALUES (@id_personnage, @id_potion)
+
+/*C*/ -- ERREUR
+-- SELECT id_type_casque
+-- FROM type_casque
+-- WHERE nom_type_casque = 'grec'
 
 -- INSERT INTO specialite (nom_specialite)
 -- SELECT 'agriculteur'
 -- WHERE NOT EXISTS (SELECT 1
 -- FROM specialite
--- WHERE nom_specialite = 'agriculteur');
+-- WHERE nom_specialite = 'agriculteur')
 
 -- SET @id_lieu = (SELECT id_lieu
 -- FROM lieu
--- WHERE nom_lieu = 'ferme Hantassion de Rotomagus');
+-- WHERE nom_lieu = 'ferme Hantassion de Rotomagus')
 
 -- SET @id_specialite = (SELECT id_specialite
 -- FROM specialite
--- WHERE nom_specialite = 'agriculteur');
+-- WHERE nom_specialite = 'agriculteur')
 
 -- INSERT INTO personnage (nom_personnage, adresse_personnage, image_personnage, id_lieu, id_specialite)
--- VALUES ('Champdeblix', 'ferme Hantassion de Rotomagus', '', @id_lieu, @id_specialite);
-
-/*B*/
--- INSERT INTO potion (nom_potion)
--- SELECT 'magique'
--- WHERE NOT EXISTS (SELECT 1
--- FROM potion
--- WHERE nom_potion = 'magique');
-
--- SET @id_personnage = (SELECT id_personnage
--- FROM personnage
--- WHERE nom_personnage = 'Bonemine');
-
--- SET @id_potion = (SELECT id_potion
--- FROM potion
--- WHERE nom_potion = 'magique');
-
--- INSERT INTO autoriser_boire (id_personnage, id_potion)
--- VALUES (@id_personnage, @id_potion);
-
-
-SELECT id_type_casque
-FROM type_casque
-WHERE nom_type_casque = 'grec';
-
-INSERT INTO specialite (nom_specialite)
-SELECT 'agriculteur'
-WHERE NOT EXISTS (SELECT 1
-FROM specialite
-WHERE nom_specialite = 'agriculteur');
-
-SET @id_lieu = (SELECT id_lieu
-FROM lieu
-WHERE nom_lieu = 'ferme Hantassion de Rotomagus');
-
-SET @id_specialite = (SELECT id_specialite
-FROM specialite
-WHERE nom_specialite = 'agriculteur');
-
-INSERT INTO personnage (nom_personnage, adresse_personnage, image_personnage, id_lieu, id_specialite)
-VALUES ('Champdeblix', 'ferme Hantassion de Rotomagus', NULL, @id_lieu, @id_specialite);
+-- VALUES ('Champdeblix', 'ferme Hantassion de Rotomagus', NULL, @id_lieu, @id_specialite)
