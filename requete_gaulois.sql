@@ -7,7 +7,7 @@
 -- SELECT l.nom_lieu, COUNT(p.id_personnage) AS nbPersonnes
 -- FROM personnage p
 -- INNER JOIN lieu l ON p.id_lieu = l.id_lieu
--- GROUP BY l.nom_lieu
+-- GROUP BY l.id_lieu
 -- ORDER BY nbPersonnes DESC
 
 /*EXO 3*/
@@ -21,7 +21,7 @@
 -- SELECT s.nom_specialite, COUNT(p.id_personnage) AS nbPersonnes
 -- FROM personnage p
 -- INNER JOIN specialite s ON p.id_specialite = s.id_specialite
--- GROUP BY s.nom_specialite
+-- GROUP BY s.id_specialite
 -- ORDER BY nbPersonnes DESC
 
 /*EXO 5*/
@@ -35,20 +35,15 @@
 -- FROM potion po
 -- INNER JOIN composer co ON po.id_potion = co.id_potion
 -- INNER JOIN ingredient i ON co.id_potion = i.id_ingredient
--- GROUP BY po.id_potion, po.nom_potion
+-- GROUP BY po.id_potion
 -- ORDER BY coutTotal DESC
-/*
-SELECT po.nom_potion, co.qte, i.cout_ingredient
-FROM potion po
-INNER JOIN composer co ON po.id_potion = co.id_potion
-INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 
 /*EXO 7*/
--- SELECT /*potion, */i.nom_ingredient, i.cout_ingredient, co.qte
--- FROM /*potion po, */ingredient i
+-- SELECT i.nom_ingredient, i.cout_ingredient, co.qte
+-- FROM ingredient i
 -- INNER JOIN composer co ON i.id_ingredient = co.id_ingredient
 -- INNER JOIN potion po ON co.id_potion = po.id_potion
--- WHERE po.nom_potion LIKE 'Santé'
+-- WHERE po.nom_potion = 'Santé'
 
 /*EXO 8*/
 -- SELECT p.nom_personnage, SUM(pc.qte) AS casquesPris
@@ -61,14 +56,15 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- 	FROM personnage p
 -- 	INNER JOIN prendre_casque pc ON p.id_personnage = pc.id_personnage
 -- 	INNER JOIN casque c ON pc.id_casque = c.id_casque
--- 	GROUP BY p.nom_personnage
--- )
+-- 	GROUP BY p.id_personnage
+-- );
 
 /*EXO 9*/
--- SELECT p.nom_personnage, bo.dose_boire
+-- SELECT p.nom_personnage, SUM(bo.dose_boire) AS qteBue
 -- FROM personnage p
 -- INNER JOIN boire bo ON p.id_personnage = bo.id_personnage
--- ORDER BY bo.dose_boire DESC
+-- GROUP BY p.id_personnage
+-- ORDER BY qteBue DESC;
 
 /*EXO 10*/
 -- SELECT b.nom_bataille, SUM(pc.qte) AS casquePris
@@ -79,15 +75,15 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- 	SELECT SUM(pc.qte)
 -- 	FROM bataille b
 -- 	INNER JOIN prendre_casque pc ON b.id_bataille = pc.id_bataille
--- 	GROUP BY b.nom_bataille
--- )
+-- 	GROUP BY b.id_bataille
+-- );
 
 /*EXO 11*/
 -- SELECT tc.nom_type_casque, SUM(c.cout_casque) AS coutTotal
 -- FROM casque c
 -- INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
--- GROUP BY tc.nom_type_casque
--- ORDER BY coutTotal DESC
+-- GROUP BY tc.id_type_casque
+-- ORDER BY coutTotal DESC;
 
 /*EXO 12*/
 -- SELECT po.nom_potion
@@ -114,7 +110,16 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- SELECT p.id_personnage, p.nom_personnage
 -- FROM personnage p
 -- LEFT JOIN boire bo ON p.id_personnage = bo.id_personnage
--- WHERE bo.id_personnage IS NULL
+-- WHERE bo.id_personnage IS NULL;
+
+-- SELECT p.id_personnage, p.nom_personnage
+-- FROM personnage p
+-- WHERE p.id_personnage NOT IN (
+-- 	SELECT p.id_personnage
+-- 	FROM personnage p
+-- 	LEFT JOIN boire bo ON p.id_personnage = bo.id_personnage
+-- 	WHERE bo.id_personnage IS NOT NULL
+-- );
 
 /*EXO 15*/
 -- SELECT p.nom_personnage
@@ -151,7 +156,13 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- INSERT INTO personnage
 -- (nom_personnage, adresse_personnage, image_personnage, id_lieu, id_specialite)
 -- VALUES
--- ('Champdeblix', 'Ferme Hantassion', 'indisponible.jpg', @id_lieu, @id_specialite)
+-- ('Champdeblix', 'Ferme Hantassion', 'indisponible.jpg', @id_lieu, @id_specialite);
+
+-- /*PLUS SIMPLE*/
+-- INSERT INTO personnage
+-- (nom_personnage, adresse_personnage, image_personnage, id_lieu, id_specialite)
+-- VALUES
+-- ('Champdeblix', 'Ferme Hantassion', 'indisponible.jpg', 9, 12)
 
 /*B*/
 -- INSERT INTO potion
@@ -178,29 +189,40 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- INSERT INTO autoriser_boire
 -- (id_potion, id_personnage)
 -- VALUES
--- (@id_potion, @id_personnage)
+-- (@id_potion, @id_personnage);
+
+-- /*PLUS SIMPLE*/
+-- INSERT INTO autoriser_boire
+-- (id_potion, id_personnage)
+-- VALUES
+-- (1, 12);
 
 /*C*/ -- ERREUR
-   /*Trouver casque - (casque ∩ casque_pris) où nom_type_casque = 'Grec'*/
--- SELECT c.id_casque, c.nom_casque
--- FROM casque c
--- INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
--- LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
--- WHERE pc.id_casque IS NULL
--- AND tc.nom_type_casque = 'Grec';
+   /*Trouver casque - (casque ∩ prendre_casque) où nom_type_casque = 'Grec'*/
+   /*
+SELECT c.id_casque, c.nom_casque
+FROM casque c
+INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
+LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
+WHERE pc.id_casque IS NULL
+AND tc.nom_type_casque = 'Grec';*/
 
--- DELETE FROM casque
--- WHERE id_casque IN (
---     SELECT c.id_casque
---     FROM casque c
---     LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
---     WHERE c.id_type_casque = (
---         SELECT id_type_casque
---         FROM type_casque
---         WHERE nom_type_casque = 'Grec'
---     )
---     AND pc.id_casque IS NULL
--- )
+-- DELETE FROM composer
+-- WHERE id_potion = @id_potion
+-- AND id_ingredient = @id_ingredient
+/*
+DELETE FROM casque
+WHERE id_casque IN (
+    SELECT c.id_casque
+    FROM casque c
+    LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
+    WHERE c.id_type_casque = (
+        SELECT id_type_casque
+        FROM type_casque
+        WHERE nom_type_casque = 'Grec'
+    )
+    AND pc.id_casque IS NULL
+);*/
 
 /*
 INSERT INTO `casque` (`id_casque`, `nom_casque`, `cout_casque`, `id_type_casque`) VALUES
@@ -249,7 +271,12 @@ INSERT INTO `casque` (`id_casque`, `nom_casque`, `cout_casque`, `id_type_casque`
 
 -- UPDATE personnage
 -- SET adresse_personnage = 'Prison de Condate', image_personnage = 'indisponible.jpg', id_lieu = @id_lieu, id_specialite = @id_specialite
--- WHERE nom_personnage = 'Zérozérosix'
+-- WHERE nom_personnage = 'Zérozérosix';
+
+-- /*PLUS SIMPLE*/
+-- UPDATE personnage
+-- SET adresse_personnage = 'Prison de Condate', image_personnage = 'indisponible.jpg', id_lieu = 9, id_specialite = 17
+-- WHERE nom_personnage = 'Zérozérosix';
 
 /*E*/
 -- SET @id_potion = (
@@ -266,7 +293,12 @@ INSERT INTO `casque` (`id_casque`, `nom_casque`, `cout_casque`, `id_type_casque`
 
 -- DELETE FROM composer
 -- WHERE id_potion = @id_potion
--- AND id_ingredient = @id_ingredient
+-- AND id_ingredient = @id_ingredient;
+
+-- /*PLUS SIMPLE*/
+-- DELETE FROM composer
+-- WHERE id_potion = 9
+-- AND id_ingredient = 19;
 
 /*F*/
 -- SET @id_bataille = (
@@ -291,3 +323,9 @@ INSERT INTO `casque` (`id_casque`, `nom_casque`, `cout_casque`, `id_type_casque`
 -- SET id_casque = @id_casque, qte = 42
 -- WHERE id_personnage = @id_personnage
 -- AND id_bataille = @id_bataille
+
+-- /*PLUS SIMPLE*/
+-- UPDATE prendre_casque
+-- SET id_casque = 10, qte = 42
+-- WHERE id_personnage = 5
+-- AND id_bataille = 9
