@@ -267,3 +267,27 @@ INSERT INTO `casque` (`id_casque`, `nom_casque`, `cout_casque`, `id_type_casque`
 -- DELETE FROM composer
 -- WHERE id_potion = @id_potion
 -- AND id_ingredient = @id_ingredient
+
+/*F*/
+-- SET @id_bataille = (
+-- SELECT id_bataille
+-- FROM bataille
+-- WHERE nom_bataille = 'Attaque de la banque postale'
+-- );
+
+-- SET @id_casque = (
+-- SELECT id_casque
+-- FROM casque
+-- WHERE nom_casque = 'Weisenau'
+-- );
+
+-- SET @id_personnage = (
+-- SELECT id_personnage
+-- FROM personnage
+-- WHERE nom_personnage = 'Obélix'
+-- );
+
+-- UPDATE prendre_casque
+-- SET id_casque = @id_casque, qte = 42
+-- WHERE id_personnage = @id_personnage
+-- AND id_bataille = @id_bataille
