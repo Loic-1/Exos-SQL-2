@@ -30,7 +30,7 @@
 -- INNER JOIN lieu l ON b.id_lieu = l.id_lieu
 -- ORDER BY b.date_bataille -- JE PARS DU PRINCIPE QUE CES DATES SONT EN - (AVANT L'AN 0)
 
-/*EXO 6*/ -- BOSSER ENCORE DESSUS
+/*EXO 6*/
 -- SELECT po.id_potion, po.nom_potion, SUM(co.qte * i.cout_ingredient) AS coutTotal
 -- FROM potion po
 -- INNER JOIN composer co ON po.id_potion = co.id_potion
@@ -56,8 +56,13 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- INNER JOIN prendre_casque pc ON p.id_personnage = pc.id_personnage
 -- INNER JOIN casque c ON pc.id_casque = c.id_casque
 -- GROUP BY p.nom_personnage
--- ORDER BY casquesPris DESC
--- LIMIT 1
+-- HAVING casquesPris >= ALL(
+-- 	SELECT SUM(pc.qte)
+-- 	FROM personnage p
+-- 	INNER JOIN prendre_casque pc ON p.id_personnage = pc.id_personnage
+-- 	INNER JOIN casque c ON pc.id_casque = c.id_casque
+-- 	GROUP BY p.nom_personnage
+-- )
 
 /*EXO 9*/
 -- SELECT p.nom_personnage, bo.dose_boire
@@ -70,8 +75,12 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- FROM bataille b
 -- INNER JOIN prendre_casque pc ON b.id_bataille = pc.id_bataille
 -- GROUP BY b.nom_bataille
--- ORDER BY casquePris DESC
--- LIMIT 1
+-- HAVING casquePris >= ALL (
+-- 	SELECT SUM(pc.qte)
+-- 	FROM bataille b
+-- 	INNER JOIN prendre_casque pc ON b.id_bataille = pc.id_bataille
+-- 	GROUP BY b.nom_bataille
+-- )
 
 /*EXO 11*/
 -- SELECT tc.nom_type_casque, SUM(c.cout_casque) AS coutTotal
@@ -93,8 +102,13 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- INNER JOIN personnage p ON l.id_lieu = p.id_lieu
 -- WHERE NOT l.nom_lieu = 'Village gaulois'
 -- GROUP BY l.nom_lieu
--- ORDER BY nbHabitants DESC
--- LIMIT 1
+-- HAVING nbHabitants >= ALL(
+-- 	SELECT COUNT(p.id_lieu)
+-- 	FROM lieu l
+-- 	INNER JOIN personnage p ON l.id_lieu = p.id_lieu
+-- 	WHERE NOT l.nom_lieu = 'Village gaulois'
+-- 	GROUP BY l.nom_lieu
+-- )
 
 /*EXO 14*/
 -- SELECT p.id_personnage, p.nom_personnage
@@ -164,8 +178,21 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- (@id_potion, @id_personnage)
 
 /*C*/ -- ERREUR
-/*
-SELECT nom_casque
-FROM type_casque
-WHERE nom_type_casque = 'Grec'*/
+   /*Trouver casque - (casque ∩ casque_pris) où nom_type_casque = 'Grec'*/
+-- SELECT c.id_casque, c.nom_casque
+-- FROM casque c
+-- INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
+-- LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
+-- WHERE pc.id_casque IS NULL
+-- AND tc.nom_type_casque = 'Grec'
 
+-- DELETE c.*
+-- FROM casque c
+-- WHERE c.id_casque IS IN (
+-- 	SELECT c.id_casque
+-- 	FROM casque c
+-- 	INNER JOIN type_casque tc ON c.id_type_casque = tc.id_type_casque
+-- 	LEFT JOIN prendre_casque pc ON c.id_casque = pc.id_casque
+-- 	WHERE pc.id_casque IS NULL
+-- 	AND tc.nom_type_casque = 'Grec'
+-- )
