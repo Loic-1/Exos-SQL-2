@@ -216,6 +216,23 @@ WHERE c.id_casque IN (
 )
 
 
+/*
+DELETE FROM casque
+WHERE id_casque IN (
+    SELECT c.id_casque
+    FROM casque c
+    LEFT JOIN bataille b ON c.id_casque = b.id_casque
+    WHERE c.id_type_casque = (
+        SELECT id_type_casque
+        FROM type_casque
+        WHERE nom_type_casque = 'grec'
+    )
+    AND b.id_casque IS NULL
+);
+
+*/
+
+
 
 
 
