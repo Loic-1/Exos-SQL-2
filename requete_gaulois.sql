@@ -250,3 +250,20 @@ INSERT INTO `casque` (`id_casque`, `nom_casque`, `cout_casque`, `id_type_casque`
 -- UPDATE personnage
 -- SET adresse_personnage = 'Prison de Condate', image_personnage = 'indisponible.jpg', id_lieu = @id_lieu, id_specialite = @id_specialite
 -- WHERE nom_personnage = 'Zérozérosix'
+
+/*E*/
+-- SET @id_potion = (
+-- SELECT id_potion -- 9
+-- FROM potion
+-- WHERE nom_potion =  'Soupe'
+-- );
+
+-- SET @id_ingredient = (
+-- SELECT id_ingredient -- 19
+-- FROM ingredient
+-- WHERE nom_ingredient = 'Persil'
+-- );
+
+-- DELETE FROM composer
+-- WHERE id_potion = @id_potion
+-- AND id_ingredient = @id_ingredient
