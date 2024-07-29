@@ -111,3 +111,19 @@ INNER JOIN ingredient i ON co.id_potion = i.id_ingredient*/
 -- INNER JOIN potion po ON au.id_potion = po.id_potion
 -- WHERE po.nom_potion = 'Magique'
 -- )
+
+/*A*/
+-- INSERT INTO lieu (nom_lieu)
+-- SELECT 'ferme Hantassion de Rotomagus'
+-- WHERE NOT EXISTS (SELECT 1 FROM lieu WHERE nom_lieu = 'ferme Hantassion de Rotomagus');
+
+-- INSERT INTO specialite (nom_specialite)
+-- SELECT 'agriculteur'
+-- WHERE NOT EXISTS (SELECT 1 FROM specialite WHERE nom_specialite = 'agriculteur');
+
+-- SET @id_lieu = (SELECT id_lieu FROM lieu WHERE nom_lieu = 'ferme Hantassion de Rotomagus');
+
+-- SET @id_specialite = (SELECT id_specialite FROM specialite WHERE nom_specialite = 'agriculteur');
+
+-- INSERT INTO personnage (nom_personnage, adresse_personnage, image_personnage, id_lieu, id_specialite)
+-- VALUES ('Champdeblix', 'ferme Hantassion de Rotomagus', '', @id_lieu, @id_specialite);
